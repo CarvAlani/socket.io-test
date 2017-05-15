@@ -30,28 +30,32 @@
       $(function () {
         var all_users;
         $('.login').submit(function() {
-          $('.login').hide();
-          $('.users').show();
-          var socket = io();
-          $(window).on('beforeunload', function() {
-            socket.emit('remove user', $('#login').val())
-          })
-          socket.on('new user', function(users){
-            all_users = users;
-            $('#users').html('<tr><th>UserName</th><th>Since</th></tr>');
-            all_users.forEach(function (user) {
-              var date = new Date(user.since);
-              $('#users').append('<tr><td>'+ user.name + '</td><td>' + ((+new Date() - date)/1000) + ' seconds</td></tr>');
+          if ($('#login').val() === "") {
+            $('#login').css('border','solid 2px red');
+          } else {
+            $('.login').hide();
+            $('.users').show();
+            var socket = io();
+            $(window).on('beforeunload', function() {
+              socket.emit('remove user', $('#login').val())
             })
-          });
-          socket.emit('new user', $('#login').val());
-          setInterval(function(){
-            $('#users').html('<tr><th>UserName</th><th>Since</th></tr>');
-            all_users.forEach(function (user) {
-              var date = new Date(user.since);
-              $('#users').append('<tr><td>'+ user.name + '</td><td>' + ((+new Date() - date)/1000) + ' seconds</td></tr>');
-            })
-          }, 1000);
+            socket.on('new user', function(users){
+              all_users = users;
+              $('#users').html('<tr><th>UserName</th><th>Since</th></tr>');
+              all_users.forEach(function (user) {
+                var date = new Date(user.since);
+                $('#users').append('<tr><td>'+ user.name + '</td><td>' + ((+new Date() - date)/1000) + ' seconds</td></tr>');
+              })
+            });
+            socket.emit('new user', $('#login').val());
+            setInterval(function(){
+              $('#users').html('<tr><th>UserName</th><th>Since</th></tr>');
+              all_users.forEach(function (user) {
+                var date = new Date(user.since);
+                $('#users').append('<tr><td>'+ user.name + '</td><td>' + ((+new Date() - date)/1000) + ' seconds</td></tr>');
+              })
+            }, 1000);
+          }
           return false;
         });
       });
