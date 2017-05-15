@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+  <head>
+    <title></title>
+    <style media="screen">
+      th {
+          text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+    <form class="login" action="">
+      <input id="login" autocomplete="off" placeholder="UserName"/><button>Login</button>
+    </form>
+    <div class="users" style="display:none;">
+      <h1>Users</h1>
+      <table id="users" style="width:100%">
+        <tr>
+          <th>UserName</th>
+          <th>Since</th>
+        </tr>
+      </table>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g="
+      crossorigin="anonymous"></script>
+    <script>
+      $(function () {
+        var all_users;
+        $('.login').submit(function() {
+          $('.login').hide();
+          $('.users').show();
+          var socket = io();
+          $(window).on('beforeunload', function() {
+            socket.emit('remove user', $('#login').val())
+          })
+          socket.on('new user', function(users){
+            all_users = users;
+            $('#users').html('<tr><th>UserName</th><th>Since</th></tr>');
+            all_users.forEach(function (user) {
+              var date = new Date(user.since);
+              $('#users').append('<tr><td>'+ user.name + '</td><td>' + ((+new Date() - date.valueOf())/1000) + ' seconds</td></tr>');
+            })
+          });
+          socket.emit('new user', $('#login').val());
+          setInterval(function(){
+            $('#users').html('<tr><th>UserName</th><th>Since</th></tr>');
+            all_users.forEach(function (user) {
+              var date = new Date(user.since);
+              $('#users').append('<tr><td>'+ user.name + '</td><td>' + ((+new Date() - date.valueOf())/1000) + ' seconds</td></tr>');
+            })
+          }, 1000);
+          return false;
+        });
+      });
+    </script>
+  </body>
+</html>
