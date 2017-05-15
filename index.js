@@ -5,7 +5,7 @@ const port = process.env.PORT || 8080;
 
 const users = [];
 
-app.get('/', (req, res) => {
+app.get('/socket-io-test', (req, res) => {
   res.sendFile(__dirname + '/public/index.html');
 });
 
@@ -13,7 +13,7 @@ io.on('connection', (socket) => {
   // console.log('new connection');
 
   socket.on('new user', (user) => {
-    const buff = {name: user, since: new Date()};
+    const buff = {name: user, since: +new Date()};
     users.push(buff);
     io.emit('new user', users);
   });
