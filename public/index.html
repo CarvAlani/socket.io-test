@@ -41,7 +41,7 @@
             $('#users').html('<tr><th>UserName</th><th>Since</th></tr>');
             all_users.forEach(function (user) {
               var date = new Date(user.since);
-              $('#users').append('<tr><td>'+ user.name + '</td><td>' + ((+new Date() - date.valueOf())/1000) + ' seconds</td></tr>');
+              $('#users').append('<tr><td>'+ user.name + '</td><td>' + ((+new Date() - date)/1000) + ' seconds</td></tr>');
             })
           });
           socket.emit('new user', $('#login').val());
@@ -49,7 +49,7 @@
             $('#users').html('<tr><th>UserName</th><th>Since</th></tr>');
             all_users.forEach(function (user) {
               var date = new Date(user.since);
-              $('#users').append('<tr><td>'+ user.name + '</td><td>' + ((+new Date() - date.valueOf())/1000) + ' seconds</td></tr>');
+              $('#users').append('<tr><td>'+ user.name + '</td><td>' + ((+new Date() - date)/1000) + ' seconds</td></tr>');
             })
           }, 1000);
           return false;
