@@ -5,7 +5,7 @@ const port = process.env.PORT || 8080;
 
 const users = [];
 
-app.get('/socket-io-test', (req, res) => {
+app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html');
 });
 
